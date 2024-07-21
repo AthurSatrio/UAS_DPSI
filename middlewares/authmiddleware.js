@@ -4,10 +4,12 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'your_jwt_secret'; // Replace with your actual secret key
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers['authorization']?.replace('Bearer ', '');
-  if (!token) {
+  const authHeader = req.headers['Authorization'];
+  if (!authHeader) {
     return res.status(401).send({ message: 'Authentication required' });
   }
+
+  const token = authHeader.replace('Bearer ', '');
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded; // Attach decoded token payload to req.user
