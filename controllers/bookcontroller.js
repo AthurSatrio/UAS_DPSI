@@ -6,5 +6,17 @@ const addBook = async (req, res) => {
   await db.collection('books').doc().set(newBook);
   res.status(201).send({ message: 'Book added successfully' });
 };
+const getBooks = async (req, res) => {
+  try {
+    const booksSnapshot = await db.collection('books').get();
+    const books = [];
+    booksSnapshot.forEach((doc) => {
+      books.push({ id: doc.id, ...doc.data() });
+    });
+    res.status(200).send(books);
+  } catch (error) {
+    res.status(500).send({ message: 'Error getting books', error });
+  }
+};
 
-module.exports = { addBook };
+module.exports = { addBook, getBooks };
