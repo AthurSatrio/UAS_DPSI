@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'your_jwt_secret'; // Replace with your actual secret key
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.headers['authorization']?.replace('Bearer ', '');
   if (!token) {
     return res.status(401).send({ message: 'Authentication required' });
   }
