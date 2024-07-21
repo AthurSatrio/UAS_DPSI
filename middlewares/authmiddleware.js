@@ -4,17 +4,17 @@ const authMiddleware = (role) => {
   return (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
     if (!token) {
-      return res.status(401).send({ message: 'No token provided' });
+      return res.status(401).send({ message: 'Authentication required' });
     }
     try {
-      const decoded = jwt.verify(token, 'your_jwt_secret');
+      const decoded = jwt.verify(token, 'your_jwt_secret'); // replace 'your_jwt_secret' with your secret key
       req.user = decoded;
-      if (role && decoded.role !== role) {
-        return res.status(403).send({ message: 'Forbidden' });
+      if (role && req.user.role !== role) {
+        return res.status(403).send({ message: 'Access denied' });
       }
       next();
     } catch (error) {
-      res.status(401).send({ message: 'Invalid token' });
+      res.status(401).send({ message: 'Invalid token', error: error.message });
     }
   };
 };
